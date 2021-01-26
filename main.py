@@ -12,4 +12,4 @@ projection=np.fft.fftshift(np.fft.fft2(data))
 
 projection=np.abs(projection)
 io.showimage(projection)
-io.writeimage(data,"./data/Lenna_gray.png")
+#io.writeimage(data,"./data/Lenna_test.png")
