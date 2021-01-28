@@ -1,4 +1,6 @@
 import math
+
+from numpy.lib.type_check import real
 import fileioput as fio
 import core
 import numpy as np
@@ -14,12 +16,13 @@ fourlieSpace=projection
 realSpace=np.zeros((projection.shape[0],projection.shape[1]))
 for i in range(10):
     realSpace=core.iFFT(fourlieSpace)
-    realSpace=core.ERcc(realSpace)
+    realSpace=core.ERcc(realSpace,padding)
     fourlieSpace=core.FFT(realSpace)
+    fourlieSpace=core.FScc(fourlieSpace,projection)
 
 
 
 
-projection=np.abs(projection)
+projection=np.abs(realSpace)
 fio.showimage(projection)
-#io.writeimage(data,"./data/Lenna_test.png")
+fio.writeimage(projection,"./data/Lenna_test.png")
