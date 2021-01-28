@@ -16,5 +16,6 @@ def showimage(data):
     pass
 
 def writeimage(data,path):
+    data=np.array(np.floor(data*(255/np.max(data))),dtype='uint8')
     Image.fromarray(data).save(path)
     pass
