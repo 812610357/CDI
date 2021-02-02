@@ -1,8 +1,9 @@
-import fileioput as fio
-import core
-import numpy as np
 import cupy as cp
 import matplotlib.pyplot as plt
+import numpy as np
+
+import core
+import fileioput as fio
 
 path = "./data/Lenna_test.png"
 oversamplingRatio = 3
@@ -17,8 +18,8 @@ projection = np.abs(core.FFT(data))
 fourlieSpace = projection
 realSpace = core.iFFT(fourlieSpace)
 
-for i in range(5):
-    realSpace = core.HIO(realSpace, projection, padding, 0.5, 20)
+for i in range(100):
+    realSpace = core.HIO(realSpace, projection, padding, 0.8, 20)
     realSpace = core.ER(realSpace, projection, padding, 5)
 
 

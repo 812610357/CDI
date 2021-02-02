@@ -25,12 +25,9 @@ def HIOcc(data,temp,padding,beta):
     HIO算法的实空间约束条件
     '''
     inside=temp[padding[0]:-padding[0],padding[1]:-padding[1]]
-    insaide=cp.pad(inside,((padding[0],padding[1]),(padding[0],padding[1])),'constant')
     outside=data-beta*temp
-    for i in range(padding[0],outside.shape[0]-padding[0]):
-        for j in range(padding[1],outside.shape[1]-padding[1]):
-            outside[i,j]=0
-    return(insaide+outside) 
+    outside[padding[0]:outside.shape[0]-padding[0],padding[1]:outside.shape[1]-padding[1]]=inside
+    return(outside) 
 
 def FScc(data,measurement):
     data=cp.abs(measurement)*data/cp.abs(data)
