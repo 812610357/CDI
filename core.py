@@ -1,23 +1,23 @@
-import numpy as np
+import cupy as cp
 
 def FFT(data):
     '''
     傅里叶变换
     '''
-    return(np.fft.fft2(data))
+    return(cp.fft.fft2(data))
 
 def iFFT(data):
     '''
     傅里叶逆变换
     '''
-    return(np.fft.ifft2(data))
+    return(cp.fft.ifft2(data))
 
 def ERcc(data,padding):
     '''
     ER算法的实空间约束条件
     '''
     data=data[padding[0]:-padding[0],padding[1]:-padding[1]]
-    data=np.pad(data,((padding[0],padding[1]),(padding[0],padding[1])),'constant')
+    data=cp.pad(data,((padding[0],padding[1]),(padding[0],padding[1])),'constant')
     return(data)
 
 def HIOcc(data,temp,padding,beta):
@@ -25,7 +25,7 @@ def HIOcc(data,temp,padding,beta):
     HIO算法的实空间约束条件
     '''
     inside=temp[padding[0]:-padding[0],padding[1]:-padding[1]]
-    insaide=np.pad(inside,((padding[0],padding[1]),(padding[0],padding[1])),'constant')
+    insaide=cp.pad(inside,((padding[0],padding[1]),(padding[0],padding[1])),'constant')
     outside=data-beta*temp
     for i in range(padding[0],outside.shape[0]-padding[0]):
         for j in range(padding[1],outside.shape[1]-padding[1]):
@@ -33,7 +33,7 @@ def HIOcc(data,temp,padding,beta):
     return(insaide+outside) 
 
 def FScc(data,measurement):
-    data=np.abs(measurement)*data/np.abs(data)
+    data=cp.abs(measurement)*data/cp.abs(data)
     return(data)
 
 def ER(realSpace,measurement,padding,t):
