@@ -18,7 +18,7 @@ projection = np.abs(core.FFT(data))
 fourlieSpace = projection
 realSpace = core.iFFT(fourlieSpace)
 
-for i in range(1000):
+for i in range(100):
     realSpace = core.HIO(realSpace, projection, padding, 0.8, 20)
     realSpace = core.ER(realSpace, projection, padding, 5)
 
