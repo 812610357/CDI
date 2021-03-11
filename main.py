@@ -8,21 +8,38 @@ import fileioput as fio
 path = "./data/Lenna_test.png"
 oversamplingRatio = 3
 data = cp.array(fio.readimage("./data/Lenna.png"))
+
 padding = np.array(np.floor(np.array(data.shape) *
                             (oversamplingRatio-1)*0.5), dtype='int64')
 data = cp.pad(data, ((padding[0], padding[1]),
                      (padding[0], padding[1])), 'constant')
 projection = np.abs(core.FFT(data))
-# noise=np.random.poisson(projection.shape[0],)
+
+noise = cp.random.normal(0,1, projection.shape)*20
+projection+=noise
 
 fourlieSpace = projection
 realSpace = core.iFFT(fourlieSpace)
 
-for i in range(100):
+for i in range(50):
     realSpace = core.HIO(realSpace, projection, padding, 0.8, 20)
     realSpace = core.ER(realSpace, projection, padding, 5)
 
+result = cp.asnumpy(
+    np.abs(realSpace[padding[0]:-padding[0], padding[1]:-padding[1]]))
+# fio.showimage(result)
+fio.writeimage(result, "./data/Lenna_test.png")
+print("1")
 
-projection = cp.asnumpy(np.abs(realSpace[padding[0]:-padding[0], padding[1]:-padding[1]]))
-# fio.showimage(projection)
-fio.writeimage(projection, "./data/Lenna_test.png")
+
+'''
+降噪
+'''
+
+
+realSpace = core.NR(realSpace, projection, padding, 1, 50)
+
+result = cp.asnumpy(
+    np.abs(realSpace[padding[0]:-padding[0], padding[1]:-padding[1]]))
+# fio.showimage(result)
+fio.writeimage(result, "./data/Lenna_test_nr.png")

@@ -41,8 +41,12 @@ def HIOcc(data, temp, padding, beta):
     return(outside)
 
 
-def NRcc(data, temp, padding, beta):
-    
+def NRcc(data, fourlie, padding, gamma):
+    outside = data
+    outside[padding[0]:outside.shape[0]-padding[0],
+            padding[1]:outside.shape[1]-padding[1]] = cp.zeros(padding)
+    nosiedata = FFT(outside)
+    data = iFFT(fourlie-nosiedata*gamma)
     return(data)
 
 
@@ -53,6 +57,7 @@ def ER(realSpace, measurement, padding, t):
         fourlieSpace = FScc(fourlieSpace, measurement)
         realSpace = iFFT(fourlieSpace)
         realSpace = ERcc(realSpace, padding)
+        
     return(realSpace)
 
 
@@ -71,5 +76,7 @@ def NR(realSpace, measurement, padding, gamma, t):
     for i in range(t):
         fourlieSpace = FFT(realSpace)
         fourlieSpace = FScc(fourlieSpace, measurement)
-        realSpaceTemp = iFFT(fourlieSpace)
-        realSpace = NRcc(realSpace, realSpaceTemp, padding, gamma)
+        realSpace = iFFT(fourlieSpace)
+        realSpace = NRcc(realSpace, fourlieSpace, padding, gamma)
+        realSpace = ERcc(realSpace, padding)
+    return(realSpace)
