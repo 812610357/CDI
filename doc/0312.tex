@@ -154,4 +154,37 @@
     \end{figure}
 \end{frame}
 
+\section{改进思考}
+
+\begin{frame}
+    \frametitle{二维成像}
+    \begin{block}{没有实质性进展}
+        \begin{itemize}
+            \item 降噪算法并不理想
+            \item X-Ray Ptychography可以弥补单次CDI的缺点
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{三维重建}
+    \begin{block}{傅里叶网格}
+        \begin{itemize}
+            \item 在不同的位置网格稀疏不一，有些地方的网格无法获得精确数据的网格，只能按照未知处理。
+            \item 数据密集的地方，如何最大限度的使用；测量数据。
+            \item 传统的网格是均匀的，也许可以设置密度不一的网格。
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+    \begin{frame}
+        \frametitle{三维重建} 
+    \begin{block}{重建算法}
+        \begin{itemize}
+            \item 苗老师的代码已经十分完善，且开源，提高效率只能寄托于硬件。
+            \item 考虑将GENFIRE与其他较为成熟的算法进行结合，例如FBP、ART等。
+        \end{itemize}
+    \end{block}
+\end{frame}
+
 \end{document}

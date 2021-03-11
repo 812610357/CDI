@@ -15,7 +15,7 @@ data = cp.pad(data, ((padding[0], padding[1]),
                      (padding[0], padding[1])), 'constant')
 projection = np.abs(core.FFT(data))
 
-noise = cp.random.normal(0,1, projection.shape)*20
+noise = cp.random.normal(0,1, projection.shape)*50
 projection+=noise
 
 fourlieSpace = projection
