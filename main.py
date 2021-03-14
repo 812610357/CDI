@@ -15,17 +15,17 @@ data = cp.pad(data, ((padding[0], padding[1]),
                      (padding[0], padding[1])), 'constant')
 projection = np.abs(core.FFT(data))
 
-projection = core.H_RL(projection)
-fio.showimage(cp.fft.fftshift(projection))
+#projection = core.H_RL(projection)
+#fio.showimage(cp.fft.fftshift(projection))
 fourlieSpace = projection
 realSpace = core.iFFT(fourlieSpace)
 
-for i in range(50):
+for i in range(1000):
     realSpace = core.HIO(realSpace, projection, padding, 0.8, 20)
     realSpace = core.ER(realSpace, projection, padding, 5)
 
 result = cp.asnumpy(
     np.abs(realSpace[padding[0]:-padding[0], padding[1]:-padding[1]]))
 # fio.showimage(result)
-fio.writeimage(result, "./data/Lenna_test.png")
+fio.writeimage(result, "./data/Lenna_test_1000.png")
 print("1")
