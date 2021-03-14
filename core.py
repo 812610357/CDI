@@ -95,6 +95,7 @@ def H_(data):
     data = cp.fft.fftshift(data)
     RLfilter = cp.zeros((data.shape[0]//3, data.shape[1]//3))
     RLfilter = cp.pad(RLfilter, ((data.shape[0]//3, data.shape[1]//3),
-                                 (data.shape[0]//3, data.shape[1]//3)), 'constant', constant_values=(1, 1))
+                                 (data.shape[0]//3, data.shape[1]//3)),
+                                 'constant', constant_values=(1, 1))
     data = RLfilter*data
     return(cp.fft.fftshift(data))
