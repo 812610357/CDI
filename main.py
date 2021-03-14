@@ -15,7 +15,7 @@ data = cp.pad(data, ((padding[0], padding[1]),
                      (padding[0], padding[1])), 'constant')
 projection = np.abs(core.FFT(data))
 
-projection = core.H_RL(projection, 0.4, 1)
+projection = core.H_RL(projection, 1, 0.3)
 # fio.showimage(cp.fft.fftshift(projection))
 fourlieSpace = projection
 realSpace = core.iFFT(fourlieSpace)
@@ -27,5 +27,5 @@ for i in range(1000):
 result = cp.asnumpy(
     np.abs(realSpace[padding[0]:-padding[0], padding[1]:-padding[1]]))
 # fio.showimage(result)
-fio.writeimage(result, "./data/linear/Lenna_test_0.4-1.png")
+fio.writeimage(result, "./data/linear/Lenna_test_0.3-1_anti.png")
 print("1")

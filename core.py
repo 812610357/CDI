@@ -77,7 +77,7 @@ def NR(realSpace, measurement, padding, gamma, t):
         fourlieSpace = FFT(realSpace)
         fourlieSpace = FScc(fourlieSpace, measurement)
         realSpace = iFFT(fourlieSpace)
-        realSpace = NRcc(realSpace, fourlieSpace, pdadding, gamma)
+        realSpace = NRcc(realSpace, fourlieSpace, padding, gamma)
         realSpace = ERcc(realSpace, padding)
     return(realSpace)
 
