@@ -15,9 +15,8 @@ data = cp.pad(data, ((padding[0], padding[1]),
                      (padding[0], padding[1])), 'constant')
 projection = np.abs(core.FFT(data))
 
-noise = cp.random.normal(0,1, projection.shape)*50
-projection+=noise
-
+projection = core.H_RL(projection)
+fio.showimage(cp.fft.fftshift(projection))
 fourlieSpace = projection
 realSpace = core.iFFT(fourlieSpace)
 
@@ -30,16 +29,3 @@ result = cp.asnumpy(
 # fio.showimage(result)
 fio.writeimage(result, "./data/Lenna_test.png")
 print("1")
-
-
-'''
-降噪
-'''
-
-
-realSpace = core.NR(realSpace, projection, padding, 1, 50)
-
-result = cp.asnumpy(
-    np.abs(realSpace[padding[0]:-padding[0], padding[1]:-padding[1]]))
-# fio.showimage(result)
-fio.writeimage(result, "./data/Lenna_test_nr.png")

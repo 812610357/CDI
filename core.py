@@ -57,7 +57,7 @@ def ER(realSpace, measurement, padding, t):
         fourlieSpace = FScc(fourlieSpace, measurement)
         realSpace = iFFT(fourlieSpace)
         realSpace = ERcc(realSpace, padding)
-        
+
     return(realSpace)
 
 
@@ -80,3 +80,11 @@ def NR(realSpace, measurement, padding, gamma, t):
         realSpace = NRcc(realSpace, fourlieSpace, padding, gamma)
         realSpace = ERcc(realSpace, padding)
     return(realSpace)
+
+
+def H_RL(data):
+    data=cp.fft.fftshift(data)
+    RLfilter = cp.array([[0,0], [0,0]],dtype='float64')
+    RLfilter=cp.pad(RLfilter,((data.shape[0]//2-1,data.shape[1]//2-1),(data.shape[0]//2-1,data.shape[1]//2-1)),'linear_ramp', end_values=(1, 1))
+    data=RLfilter*data
+    return(cp.fft.fftshift(data))
