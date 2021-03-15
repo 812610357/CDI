@@ -57,9 +57,7 @@
     \end{frame}
 }
 
-\section{前人工作}
-
-\subsection{CDI}
+\section{前人工作（ER、HIO、OSS）}
 
 \begin{frame}
     \frametitle{基本构想}
@@ -117,7 +115,7 @@
             \begin{figure}
                 \subfigure[ER-HIO重建图]{\includegraphics[height=4cm]{images/Lenna_test_1000_180d.png}}
                 \qquad
-                \subfigure[ER-HIO-FS重建图]{\includegraphics[height=4cm]{images/Lenna_test_RL_0.5_re.png}}
+                \subfigure[ER-HIO-FS重建图]{\includegraphics[height=4cm]{images/Lenna_test_RL_0.5_re_0.5.png}}
             \end{figure}
         \end{column}
         \begin{column}{0.3\textwidth}
@@ -145,7 +143,7 @@
                 \small \begin{align*}
                     &E_{rms}=\sqrt{\frac{\sum_i^n (X_{obs}-X_{ori})^2}{n}}\\
                     &E_{ER-HIO}=14.0177\\
-                    &E_{ER-HIO-FC}=11.0158
+                    &E_{ER-HIO-FC}=11.0223
                 \end{align*}
             \end{block}
         \end{column}
@@ -155,13 +153,60 @@
 \subsection{方法}
 
 \begin{frame}
-    \frametitle{应用不同的滤波器}
-        \begin{figure}
-            \includesvg[height=5cm]{images/0.5-1.svg}
-        \end{figure}
-    
+    \frametitle{应用滤波器}
+        \begin{columns}
+            \begin{column}{0.5\textwidth}
+                \begin{figure}
+                    \includesvg[height=5cm]{images/0.5-1.svg}
+                \end{figure} 
+            \end{column}
+            \begin{column}{0.4\textwidth}
+                \begin{block}{分波段}
+                    此处应用线性函数进行滤波，经过测试，如图所示的线性函数滤波后重建效果最佳。
 
+                    将来还会考虑使用其他非线性滤波器进行滤波。
+                \end{block}
+            \end{column}
+        \end{columns}
 \end{frame}
 
+\begin{frame}
+    \frametitle{衍射图案对比}
+        \begin{figure}
+            \subfigure[滤波前]{\includegraphics[height=4cm]{images/Lenna_fourier.png}}
+            \qquad
+            \subfigure[高通滤波后]{\includegraphics[height=4cm]{images/high-pass.png}}
+            \qquad
+            \subfigure[低通滤波后]{\includegraphics[height=4cm]{images/low-pass.png}}
+        \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{重建图像对比}
+        \begin{figure}
+            \subfigure[滤波前]{\includegraphics[height=4cm]{images/Lenna_test_1000_180d.png}}
+            \qquad
+            \subfigure[高通滤波后]{\includegraphics[height=4cm]{images/Lenna_test_RL_0.5.png}}
+            \qquad
+            \subfigure[低通滤波后]{\includegraphics[height=4cm]{images/Lenna_test_RL_0.5_anti.png}}
+        \end{figure}
+\end{frame}
+
+\begin{frame}
+        \begin{figure}
+            \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_0.0.png}}
+            \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_0.1.png}}
+            \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_0.2.png}}
+            \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_0.3.png}}
+            \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_0.4.png}}
+            \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_0.5.png}}
+            \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_0.6.png}}
+            \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_0.7.png}}
+            \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_0.8.png}}
+            \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_0.9.png}}
+            \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_1.0.png}}
+            \subfigure{\includesvg[height=5cm]{images/rmse.svg}}
+        \end{figure}
+\end{frame}
 
 \end{document}

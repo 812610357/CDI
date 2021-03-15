@@ -5,10 +5,17 @@ import fileioput as fio
 
 data0=fio.readimage("./data/Lenna_gray_180d.png")
 
-data1 = fio.readimage("./data/linear/Lenna_test_RL_0.5_re.png")
+data1 = fio.readimage("./data/linear/Lenna_test_RL_0.5.png")
 
-data2=fio.readimage("./data/linear/Lenna_test_0.3-1_anti.png")
+data2=fio.readimage("./data/linear/Lenna_test_RL_0.5_anti.png")
 
-datarms=data0+128-data1
+for i in range(11):
+    datarms=0.1*i*data1+0.1*(10-i)*data2
+    fio.writeimage(datarms,"./data/linear/Lenna_test_RL_0.5_re_"+str(0.1*i)+".png")
 
-fio.writeimage(datarms,"./data/linear/rms_0.5_re.png")
+    data = fio.readimage(
+    "./data/linear/Lenna_test_RL_0.5_re_"+str(0.1*i)+".png")
+    a=np.array(data,dtype='float64')
+    b=np.array(data0,dtype='float64')
+    print(np.sqrt(np.mean((b-a)**2)))
+
