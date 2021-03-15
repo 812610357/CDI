@@ -15,8 +15,8 @@ data = cp.pad(data, ((padding[0], padding[1]),
                      (padding[0], padding[1])), 'constant')
 projection = np.abs(core.FFT(data))
 
-projection = core.H_RL(projection, 1, 0.3)
-# fio.showimage(cp.fft.fftshift(projection))
+projection = core.H_RL(projection, 1, 0.5)
+fio.showimage(cp.fft.fftshift(projection))
 fourlieSpace = projection
 realSpace = core.iFFT(fourlieSpace)
 

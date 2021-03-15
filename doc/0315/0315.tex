@@ -67,7 +67,7 @@
         \subfigure{\includegraphics[height=5cm]{images/bk0084fig1mag.jpg}}
         \qquad
         \subfigure{\includegraphics[height=5cm]{images/1.pdf}}
-    \end{figure}
+    \end{figure}1
 \end{frame}
 
 \begin{frame}
@@ -88,7 +88,7 @@
 
 \section{算法改进（Frequency Split, FS）}
 
-\subsection{结果展示}
+\subsection{结果}
 
 \begin{frame}
     \frametitle{重建用图}
@@ -140,16 +140,25 @@
                 \subfigure[ER-HIO-FS误差图]{\includegraphics[height=4cm]{images/rms_0.5_re.png}}
             \end{figure}
         \end{column}
+        \begin{column}{0.3\textwidth}
+            \begin{block}{均方误差}
+                \small \begin{align*}
+                    &E_{rms}=\sqrt{\frac{\sum_i^n (X_{obs}-X_{ori})^2}{n}}\\
+                    &E_{ER-HIO}=14.0177\\
+                    &E_{ER-HIO-FC}=11.0158
+                \end{align*}
+            \end{block}
+        \end{column}
     \end{columns}
-    
-
 \end{frame}
 
-\subsection{分开重建}
+\subsection{方法}
 
 \begin{frame}
     \frametitle{应用不同的滤波器}
-
+        \begin{figure}
+            \includesvg[height=5cm]{images/0.5-1.svg}
+        \end{figure}
     
 
 \end{frame}
