@@ -27,5 +27,5 @@ for i in range(1000):
 result = cp.asnumpy(
     np.abs(realSpace[padding[0]:-padding[0], padding[1]:-padding[1]]))
 # fio.showimage(result)
-fio.writeimage(result, "./data/linear/Lenna_test_0.3-1_anti.png")
+fio.writeimage(result, "./data/linear/Lenna_test_t.png")
 print("1")

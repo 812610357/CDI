@@ -13,8 +13,11 @@ data = np.array([12.2181224613069,
                  13.160756261366355,
                  16.011480146772143,
                  19.499825990340643])
+d=np.array([14.0177,14.0177])
 
-plt.plot(linspace(0,1,11),data)
+plt.plot(linspace(0,1,11),data,label="ER-HIO-FS")
+plt.plot(linspace(0,1,2),d,label="ER-HIO")
 plt.xlabel("Proportion of high-pass")  # X轴标签
 plt.ylabel("RMSE")  # Y轴标签
+plt.legend()
 plt.show()
