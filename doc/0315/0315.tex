@@ -36,7 +36,7 @@
 
 
 \title{工作进展回报} %设置标题
-\subtitle{对傅里叶重建算法的理解}
+\subtitle{对傅里叶重建算法的改进}
 \author{Julian OU} %设置作者
 \institute[SCU]{\textit{College of Physics, Sichuan University, Chengdu 610064, China}}
 \date{\today} %设置日期
@@ -216,6 +216,50 @@
             \subfigure{\includegraphics[height=1cm]{images/Lenna_test_RL_0.5_re_1.0.png}}
             \subfigure{\includesvg[height=5cm]{images/rmse.svg}}
         \end{figure}
+\end{frame}
+
+\section{对比}
+
+\subsection{与OSS算法进行对比}
+
+\begin{frame}
+    \frametitle{重建结果}
+    \begin{columns}
+        \begin{column}{0.7\textwidth}
+            \begin{figure}
+                \setcounter{subfigure}{0}
+                \subfigure[OSS重建图]{\includegraphics[height=4cm]{images/Lenna_test_OSS_180d.png}}
+                \qquad
+                \subfigure[ER-HIO-FS重建图]{\includegraphics[height=4cm]{images/Lenna_test_RL_0.5_re_0.5.png}}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \begin{block}{重建方法}
+                OSS为用$\alpha=N,N^{0.8}$的高斯函数分别迭代了2000次后的结果
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{误差分析}
+    \begin{columns}
+        \begin{column}{0.7\textwidth}
+            \begin{figure}
+                \subfigure[ER-HIO误差图]{\includegraphics[height=4cm]{images/rms_OSS.png}}
+                \qquad
+                \subfigure[ER-HIO-FS误差图]{\includegraphics[height=4cm]{images/rms_0.5_re.png}}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \begin{block}{均方误差}
+                \small \begin{align*}
+                    &E_{OSS}=9.0815\\
+                    &E_{ER-HIO-FC}=11.0223
+                \end{align*}
+            \end{block}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \end{document}

@@ -1,4 +1,5 @@
 import cupy as cp
+import fileioput as fio
 
 
 def FFT(data):
@@ -50,6 +51,17 @@ def NRcc(data, fourlie, padding, gamma):
     return(data)
 
 
+def OSScc(data, padding, alpha):
+    '''
+    OSS算法的实空间约束条件
+    '''
+    inside = data[padding[0]:-padding[0], padding[1]:-padding[1]]
+    outside = iFFT(FFT(data)*gaussion(alpha, data.shape))
+    outside[padding[0]:outside.shape[0]-padding[0],
+            padding[1]:outside.shape[1]-padding[1]] = inside
+    return(outside)
+
+
 def ER(realSpace, measurement, padding, t):
     fourlieSpace = None
     for i in range(t):
@@ -91,11 +103,18 @@ def H_RL(data, low, high):
     return(cp.fft.fftshift(data))
 
 
-def H_(data):
-    data = cp.fft.fftshift(data)
-    RLfilter = cp.zeros((data.shape[0]//3, data.shape[1]//3))
-    RLfilter = cp.pad(RLfilter, ((data.shape[0]//3, data.shape[1]//3),
-                                 (data.shape[0]//3, data.shape[1]//3)),
-                                 'constant', constant_values=(1, 1))
-    data = RLfilter*data
-    return(cp.fft.fftshift(data))
+def gaussion(alpha, shape):
+    data = cp.zeros((2, 2))
+    data = cp.pad(data, ((shape[0]//2-1, shape[1]//2-1), (shape[0]//2-1, shape[1]//2-1)), 'linear_ramp',end_values=(shape[0]//2-1, shape[1]//2-1))
+    return(cp.fft.fftshift(cp.exp(-(data/alpha)**2/2)))
+
+
+def OSS(realSpace, measurement, padding, alpha, beta, t):
+    fourlieSpace = None
+    for i in range(t):
+        fourlieSpace = FFT(realSpace)
+        fourlieSpace = FScc(fourlieSpace, measurement)
+        realSpaceTemp = iFFT(fourlieSpace)
+        realSpace = HIOcc(realSpace, realSpaceTemp, padding, beta)
+        realSpace = OSScc(realSpace, padding, alpha)
+    return(realSpace)
