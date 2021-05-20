@@ -21,3 +21,9 @@ def writeimage(data,path):
     data=np.array(np.floor(data*(255/np.max(data))),dtype='uint8')
     Image.fromarray(data).save(path)
     pass
+
+def read(path):
+    return(np.array(Image.open(path)))
+
+a=read('./data/Lenna.png')
+print(a)

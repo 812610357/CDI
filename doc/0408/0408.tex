@@ -1,0 +1,193 @@
+%!BIB program=biber
+
+\documentclass[12pt,aspectratio=169]{beamer} %类型为文章
+\usepackage[UTF8]{ctex} %中文编码宏
+\usepackage{multicol} %分栏控制宏
+\usepackage{hyperref} %超链接宏
+\usepackage{lastpage} %总计页的宏
+\usepackage{color} %颜色控制宏
+\usepackage{graphicx} %图片插入宏
+\usepackage{subfigure} %子图插入宏
+\usepackage{animate} %动画插入宏
+\usepackage{multirow} %纵向合并宏
+\usepackage{makecell} %表格换行宏
+\usepackage{amsmath} %公式插入宏
+\usepackage{unicode-math} %公式样式宏
+\usepackage{gbt7714} %国标引用宏
+\usepackage{url} %网页链接宏
+\usepackage{doi} %doi号宏
+\usepackage{svg}
+\renewcommand{\vec}[1]{\boldsymbol{#1}} %设置向量样式
+
+\usetheme{Berlin}
+\usecolortheme{beaver}
+
+\linespread{1.2} %行距
+\setlength{\parskip}{0.5em} %段落间距
+\setlength{\parindent}{2em} %缩进距离
+
+\setmathfont{Cambria Math} %设置数学公式样式
+%\bibliographystyle{gbt7714-numerical} %设置参考文献样式
+
+%\logo{\includegraphics[height=0.1\textwidth]{images/SCU_logo.pdf}}
+%\setbeamertemplate{background}{\includegraphics[height=\paperheight]{images/SCU_logo.pdf}}
+\setbeamertemplate{itemize items}{$\blacksquare $}
+\setbeamertemplate{caption}[numbered]
+
+
+\title{工作进展回报} %设置标题
+\subtitle{基于Kramers-Kronig关系的相位恢复方法}
+\author{Julian OU} %设置作者
+\institute[SCU]{\textit{College of Physics, Sichuan University, Chengdu 610064, China}}
+\date{\today} %设置日期
+
+\begin{document}
+\maketitle %插入标题
+
+\AtBeginSection{
+    \begin{frame}
+        \frametitle{目录}
+        \tableofcontents[currentsection,subsectionstyle=hide]
+    \end{frame}
+}
+
+\AtBeginSubsection{
+    \begin{frame}
+        \subsectionpage
+    \end{frame}
+}
+
+\section{KK关系理论}
+
+\begin{frame}
+    \begin{block}{描述}
+        在x的上半平面上解析的平方可积函数$f(x)$满足方程
+        \begin{align} 
+            \Im[f(x)]=\frac{1}{\pi}P \int_{-\infty}^{\infty}\frac{\Re[f(x')]}{x'-x} \, \mathrm{d}x'
+        \end{align}
+        其中$P$为柯西主值
+    \end{block}
+    如果一个复变函数，已知其实部，且满足以上条件，那么就可以使用KK关系推出其虚部。
+\end{frame}
+
+\begin{frame}
+    把电场写作复振动，对电场取对数，便可以把强度与相位进行分离。
+    \begin{align}
+        \Re[\ln E] & =\ln I /2 \\
+        \Im[\ln E] & =\arg (E)
+    \end{align}
+    
+    如果$\ln E$的实部与虚部之间满足KK关系，就可以从强度图像中恢复相位，但是$\ln E$并不总是在上半平面上解析。
+\end{frame}
+
+\section{成像实验}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.3\textwidth}
+            \begin{figure}
+                \includegraphics[height=6cm]{images/2.png}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \small
+            \begin{table}
+                \begin{tabular}[c]{rl}
+                    光源            & 超辐射发光二极管             \\
+                    振镜系统        & 控制入射角                   \\
+                    透镜1           & 聚焦                         \\
+                    condenser聚光镜 & 会聚光源，透射场照明         \\
+                    objective物镜   & 显微镜物镜，消像差           \\
+                    透镜2           & 产生平行光束                 \\
+                    光阑            & 提供截止空间角频率           \\
+                    透镜3+透镜4     & 4f系统                       \\
+                    偏振片          & 保证线偏振光，基于标量场模型 \\
+                    CCD             & 接收信号                     \\
+                \end{tabular}
+            \end{table}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \begin{columns}
+        \begin{column}{0.3\textwidth}
+            \begin{figure}
+                \includegraphics[height=6cm]{images/1.png}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \begin{block}{在实验上使电场的传播符合KK关系的条件}
+                \begin{itemize}
+                    \item 入射波的横向波矢量为光阑的截止空间角频率
+                    \item 非散射光强于散射光
+                \end{itemize}
+            \end{block}
+            
+            \qquad 其次，要在实验上实现相位恢复，还需要考虑离散的强度图像是否兼容KK关系，以及数值计算方法。
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{证明过程}
+\begin{frame}
+    考虑将电场写作：
+    \begin{align}
+        \varepsilon(\vec{r})=\left| E(\vec{r}) \right| \exp(-i\vec{k}_{inc}\cdot \vec{r}) \label{A}
+    \end{align}
+    表示具有一定倾角的入射，其中$\vec{k}_{inc}$为入射波的横向波矢，构建一个复变函数：
+    \begin{align}
+        \chi (\vec{r})=\ln \varepsilon(\vec{r})=\ln E(\vec{r})-i\vec{k}_{inc}\cdot \vec{r}
+    \end{align}
+    实部为$\ln I /2$，虚部为$\arg(E)-\vec{k}_{inc}\cdot \vec{r}$ \label{C}
+\end{frame}
+
+\begin{frame}
+    考虑单色入射光是沿着$x$方向倾斜的平面波：
+    \begin{align}
+        E_{inc}=\left| E_{inc}(\vec{r}) \right| \exp(-i\vec{k}_{inc}\cdot \vec{r})=\left| E_{inc}(\vec{r}) \right| \exp(-i k_{inc} x)
+    \end{align}
+    在照射到物体以后，会产生散射光，考虑带限为$-k_0\sim k_0$的出射波：
+    \begin{align}
+        \varepsilon(\vec{r})=E_u(\vec{r})+E_s(\vec{r})
+    \end{align}
+    其中$E_u(\vec{r})=\left| E_{u}(\vec{r}) \right| \exp(-i k_{inc} x)$为与入射波具有相同频率的无散射场，$E_s$为由除了$k_{inc}$以外频率组成的散射场。
+\end{frame}
+
+\begin{frame}
+    因此(\ref{A})式可以写作：
+    \begin{align}
+        \chi (\vec{r})=\ln \left[E_u(\vec{r})+E_s(\vec{r})\right]=\ln [1+\frac{E_s(\vec{r})}{E_u(\vec{r})}]+\ln \left| E_u \right|
+    \end{align}
+    其中$\ln \left| E_u \right|$为常数，不会对解析性产生影响，当非散射场强度大于散射场，即$|E_u|>|E_s|$时，对数项可以进行幂级数展开：
+    \begin{align}
+        \ln [1+\frac{E_s(\vec{r})}{E_u(\vec{r})}]=\sum_{n=0}^{\infty}\frac{-1^n}{n+1}\left(\frac{E_s}{E_u}\right)^{n+1} \label{B}
+    \end{align}
+    因此只要我们证明了$E_s/E_u$是解析的，就可以证明$\chi(\vec{r})$是解析的。
+\end{frame}
+
+\begin{frame}
+    \begin{block}{Titschmarch theorem}
+        如果函数$f(x)$的傅里叶变换在$k_x<0$时为零，那么$f(x)$在x的上半平面上解析。
+    \end{block}
+
+    对$E_s/E_u$作傅里叶变换（$E_u(\vec{r})=\left| E_{u}(\vec{r}) \right| \exp(-i k_{inc} x)$），得
+    \begin{align}
+        \mathcal{F} [\frac{E_s}{E_u}](\vec{k})=\int \frac{E_s}{|E_u|} \exp[-(\vec{k}-\vec{k}_{inc}) \cdot \vec{r}] \, \mathrm{d}\vec{r}=\frac{1}{|E_u|} \mathcal{F} [E_s](\vec{k}-k_{inc}\vec{e_{kx}})
+    \end{align} 
+\end{frame}
+
+\begin{frame}
+    联系到实验上，成像系统的带通受到傅里叶平面上的光阑限制，波矢空间取值范围为$-k_0\sim k_0$。
+    \begin{align}
+        \mathcal{F} [\frac{E_s}{E_u}](\vec{k})=\frac{1}{|E_u|} \mathcal{F} [E_s](\vec{k}-k_{inc}\vec{e_{kx}})
+    \end{align} 
+    如果$k_{inc}=k_0$，那么在上式中，对于$k_x<0$的区域，傅里叶变换的值就为零，便证明了$E_s/E_u$在上半平面上解析，因此证明了(\ref{B})(\ref{C})在上半平面上解析，利用KK关系，电场于是电场的表达式可以写为
+    \begin{align}
+        E(\vec{r})=\exp\{[\frac{\ln I(\vec{r})}{2}-\frac{i}{\pi}P\int_{-\infty}^{\infty}\frac{\ln I(\vec{r'})}{2(r'_{\parallel} -r_{\parallel})}\, \mathrm{d}\vec{r'}]+i\vec{k}_{inc} \cdot \vec{r}\}
+    \end{align}
+\end{frame}
+
+
+
+\end{document}
