@@ -12,6 +12,7 @@
 \usepackage{multirow} %纵向合并宏
 \usepackage{makecell} %表格换行宏
 \usepackage{amsmath} %公式插入宏
+\usepackage{cases}
 \usepackage{unicode-math} %公式样式宏
 \usepackage{gbt7714} %国标引用宏
 \usepackage{url} %网页链接宏
@@ -59,8 +60,6 @@
 }
 
 \section{层叠相干衍射成像迭代引擎（PIE）}
-
-\subsection{PIE的基本迭代过程}
 
 \begin{frame}
     \begin{figure}
@@ -162,7 +161,7 @@
         O_{j+1}(\vec{r}) =O_{j}(\vec{r})+\alpha \frac{P_j^*(\vec{r}-\vec{R})}{|P_j(\vec{r}-\vec{R})|_{MAX}^2}[\Psi _{j}''(\vec{r})-\Psi _{j}(\vec{r})]
     \end{align*}
     
-
+    
 \end{frame}
 
 \section{PIE基于梯度的最优化问题}
@@ -209,11 +208,11 @@
             \eIf{$\left\Vert g_k \right\Vert < \varepsilon$}{
                 $x^*$=$x_k$
             }{
-            $x_{k+1}$= $x_k-\lambda g_k$
+                $x_{k+1}$= $x_k-\lambda g_k$
             }
         }
         \KwOut{$\varphi$：线性方程组的解}
-        \caption{梯度下降方法}
+        \caption{\small 梯度下降方法}
         \label{A1}
     \end{algorithm}
 \end{frame}
@@ -236,13 +235,13 @@
 
 \begin{frame}
     在数值分析中，多重网格法是一种使用层次离散化来求解微分方程的方法，是多分辨率方法的一个例子。由于直接在高分辨率（用于求解的间隔小）上进行求解时对于低频部分收敛较慢，与间隔的平方成反比，便想可以到先在低分辨率（间隔较大）上进行求解，然后再进行插值，提高其分辨率，再在更高分辨率进行计算，这样的方法就叫做多重网格方法，且迭代过程主要包含以下几个重要的组成部分：
-\begin{itemize}
-    \item 平滑（smoothing）：用线性求解器进行迭代，降低高频误差。
-    \item 计算残差（Residual Computation）：在平滑之后计算剩余误差（残差）$r_i=b-Ax_i$。
-    \item 限制（Restriction）：降低采样率，把残差放到更加粗糙的网格中。
-    \item 延拓（prolongation）：将粗网格计算的修正值插值到更精细的网格中
-    \item 修正（Correction）：将延拓的修正值添加到精细网格中。
-\end{itemize}
+    \begin{itemize}
+        \item 平滑（smoothing）：用线性求解器进行迭代，降低高频误差。
+        \item 计算残差（Residual Computation）：在平滑之后计算剩余误差（残差）$r_i=b-Ax_i$。
+        \item 限制（Restriction）：降低采样率，把残差放到更加粗糙的网格中。
+        \item 延拓（prolongation）：将粗网格计算的修正值插值到更精细的网格中
+        \item 修正（Correction）：将延拓的修正值添加到精细网格中。
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -284,9 +283,47 @@
         \includegraphics[height=6cm]{images/Multigrid_Visualization.png}
         \caption{V循环多重网格方法的示意图}
     \end{figure}
-
-    
-
 \end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \includesvg[height=5.5cm]{images/MultigridWork.svg}
+        \caption{三种多重网格方法的迭代图}
+    \end{figure}
+\end{frame}
+
+\subsection{求解泊松方程的举例}
+
+\begin{frame}
+    利用多重网格-五点差分-共轭梯度法和直接共轭梯度方法（只在一级网格中进行迭代）分别对(\ref{3.1a})式进行求解，设置求解区域为$S=\left\{(x,y)|-1\leq x\leq 1,-1\leq y\leq 1\right\}$的正方形区域，边界条件设置为(\ref{3.1b})(\ref{3.1c})式，在两个维度上的网格精度均为$10^{-3}$，即求解区域的网格大小为$2000\times 2000$，
+    \begin{subnumcases}{}
+        \frac{\partial^2 \varphi}{\partial x^2}+\frac{\partial^2 \varphi}{\partial y^2}=-\frac{\rho}{\varepsilon}=-2\pi^2 \sin(\pi x)\sin(\pi y) \label{3.1a}\\
+        \varphi=0, \, x=\pm 1 \label{3.1b} \\
+        \varphi=0, \, y=\pm 1 \label{3.1c}
+    \end{subnumcases}
+    该系统具有解析解，并可推导得到电场强度矢量的表达式，
+    \begin{align*}
+        \varphi & =\sin(\pi x)\sin(\pi y) & E=-\pi\cos(\pi x)\sin(\pi y)\vec{e_x}+\pi\sin(\pi x)\cos(\pi y)\vec{e_y}
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        %\includegraphics[height=6cm]{images/q2e.png}
+        \caption{多重网格-五点差分-共轭梯度法的求解结果}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \includegraphics[height=4.8cm]{images/error.pdf}
+        \begin{flushleft}
+            \footnotesize \qquad 多重网格法的后平滑迭代过程在三级网格中经历了1次，在二级网格中经历了7次，在一级网格中经历了43次，平均总计耗时6.89692s；直接共轭梯度法经历55次迭代，平均总计耗时10.2639s。
+        \end{flushleft}
+        \caption{两种算法的误差下降曲线}
+    \end{figure}
+\end{frame}
+
+
 
 \end{document}
