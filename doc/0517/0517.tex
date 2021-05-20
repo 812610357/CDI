@@ -39,7 +39,7 @@
 
 \title{相位衍射相位恢复方法} %设置标题
 \subtitle{使用多重网格方法加速层叠相干衍射成像}
-\author{Julian OU} %设置作者
+\author{欧纪阳} %设置作者
 \institute[SCU]{\textit{College of Physics, Sichuan University, Chengdu 610064, China}}
 \date{\today} %设置日期
 
@@ -229,7 +229,7 @@
     即在每一次外循环中，PIE等价于向负梯度方向移动了一个小步长。
 \end{frame}
 
-\section{PDE中的多重网格框架}
+\section{PDE中的多重网格方法}
 
 \subsection{基础算法构成}
 
@@ -324,6 +324,19 @@
     \end{figure}
 \end{frame}
 
+\section{多重网格框架与PIE的结合}
 
+\begin{frame}
+    \frametitle{为什么要将两者进行结合}
+    \begin{itemize}
+        \item CDI中的相位恢复问题可以看做是最优化问题，多重网格框架可以用于解决此类问题；
+        \item 目前的傅里叶迭代算法易出现收敛到局部最小值，而无法收敛到全局最小值的情况；
+        \item 在CDI实验中，可以轻松提取出不同频段成分；
+        \item 在CDI算法中，高频部分与低频率部分的收敛速度往往不尽相同；
+        \item 对粗糙网格进行处理，计算成本低廉收敛迅速，插值后可作为精细网格的预测。
+    \end{itemize}
+    
+
+\end{frame}
 
 \end{document}
