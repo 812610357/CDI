@@ -37,7 +37,7 @@
 \setbeamertemplate{caption}[numbered]
 
 
-\title{相位衍射相位恢复方法} %设置标题
+\title{相干衍射相位恢复方法} %设置标题
 \subtitle{使用多重网格方法加速层叠相干衍射成像}
 \author{欧纪阳} %设置作者
 \institute[SCU]{\textit{College of Physics, Sichuan University, Chengdu 610064, China}}
@@ -178,9 +178,9 @@
         \Phi _{\mathcal{IG}}(\vec{z})=\frac{1}{2}\sum_k^N \left\lVert |\mathcal{F}(\hat{Q}_k \vec{z})|^2 -\vec{d}_k \right\rVert _2^2
     \end{align*}
     定义测量约束集，以及其投影算子分别为：
-    \begin{align*}
-        \mathcal{M}_k (\vec{z}) & =\left\{\vec{z} : |\mathcal{F}(\hat{Q}_k \vec{z})|^2=\vec{d}_k\right\}, & \mathcal{PM}_k (\vec{z}) & =\mathcal{F}^{-1} \left[\sqrt{\vec{d}_k}\odot \exp{(i \theta \mathcal{F}(\hat{Q}_k \vec{z}))}\right]
-    \end{align*}
+    \begin{align}
+        \mathcal{M}_k (\vec{z}) & =\left\{\vec{z} : |\mathcal{F}(\hat{Q}_k \vec{z})|^2=\vec{d}_k\right\}, & \mathcal{PM}_k (\vec{z}) & =\mathcal{F}^{-1} \left[\sqrt{\vec{d}_k}\odot \exp{(i \theta \mathcal{F}(\hat{Q}_k \vec{z}))}\right] \label{2.0}
+    \end{align}
     则PIE对应的投影最优化问题可以表示为：
     \begin{align}
          & \min \limits_z \Phi (\vec{z}), & \Phi (\vec{z}) & =\frac{1}{2}\sum_k^N \left\lVert \mathcal{PM}_k(\vec{z})-\hat{Q}_k \vec{z} \right\rVert _2^2 \label{2}
@@ -220,7 +220,7 @@
 \begin{frame}
     考虑(\ref{2})式的梯度：
     \begin{align}
-        \nabla  \Phi (\vec{z}) = \frac{\partial \Phi (\vec{z})}{\partial \vec{z}} = \sum_k^N \hat{Q}_k [\mathcal{PM}_k(\vec{z})-\hat{Q}_k^T \vec{z}]
+        \nabla  \Phi (\vec{z}) = \frac{\partial \Phi (\vec{z})}{\partial \vec{z}} = \sum_k^N \hat{Q}_k^T [\mathcal{PM}_k(\vec{z})-\hat{Q}_k \vec{z}]
     \end{align}
     PIE迭代的内循环（即对所有的$N$个照明区域都做(\ref{3})式），在基于梯度的最优化问题中可以表示为：
     \begin{align}
@@ -242,6 +242,24 @@
         \item 延拓（prolongation）：将粗网格计算的修正值插值到更精细的网格中
         \item 修正（Correction）：将延拓的修正值添加到精细网格中。
     \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \subfigure[相邻两层网格]{\includegraphics[height=4cm]{images/grid.png}}
+        \quad
+        \subfigure[延拓插值方法]{\includegraphics[height=4cm]{images/inter.png}}
+        \quad
+        \subfigure[限制算子矩阵]{\includegraphics[height=4cm]{images/res.png}}
+        \caption{双线性限制及插值方法}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \includegraphics[height=6cm]{images/Multigrid_Visualization.png}
+        \caption{V循环多重网格方法的示意图}
+    \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -276,13 +294,6 @@
         \caption{\small $\nabla^2 \varphi=f$的V循环多重网格方法}
         \label{A2}
     \end{algorithm}
-\end{frame}
-
-\begin{frame}
-    \begin{figure}
-        \includegraphics[height=6cm]{images/Multigrid_Visualization.png}
-        \caption{V循环多重网格方法的示意图}
-    \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -324,18 +335,118 @@
     \end{figure}
 \end{frame}
 
-\section{多重网格框架与PIE的结合}
+\section{基于梯度的多重网格框架与PIE的结合}
 
 \begin{frame}
     \frametitle{为什么要将两者进行结合}
     \begin{itemize}
         \item CDI中的相位恢复问题可以看做是最优化问题，多重网格框架可以用于解决此类问题；
         \item 目前的傅里叶迭代算法易出现收敛到局部最小值，而无法收敛到全局最小值的情况；
+        \item 在拆分频段进行重建的算法，一定程度上提高提高收敛速度，降低了误差；
         \item 在CDI实验中，可以轻松提取出不同频段成分；
         \item 在CDI算法中，高频部分与低频率部分的收敛速度往往不尽相同；
-        \item 对粗糙网格进行处理，计算成本低廉收敛迅速，插值后可作为精细网格的预测。
+        \item 对粗糙网格进行处理，计算成本低，收敛迅速，插值后可作为精细网格的预测。
     \end{itemize}
-    
+\end{frame}
+
+\begin{frame}
+    \frametitle{拆分高低频重建的效果}
+    \begin{figure}
+        \subfigure[ER-HIO重建图]{\includegraphics[height=4cm]{images/Lenna_test_1000_180d.png}}
+        \qquad
+        \subfigure[频率拆分重建图]{\includegraphics[height=4cm]{images/Lenna_test_RL_0.5_re_0.5.png}}
+        \qquad
+        \subfigure[实验用图（$512\times 512$）]{\includegraphics[height=4cm]{images/Lenna_gray_180d.png}}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{粗糙网格下的实验用图}
+    \begin{figure}
+        \subfigure[傅里叶空间提取频段]{\includegraphics[height=4.5cm]{images/f.pdf}}
+        \subfigure[$128 \times 128$]{\includegraphics[height=4.5cm]{images/128.pdf}}
+        \subfigure[$32 \times 32$]{\includegraphics[height=4.5cm]{images/32.pdf}}
+    \end{figure}
+\end{frame}
+
+\subsection{将多重网格框架用于梯度下降方法}
+\begin{frame}[allowframebreaks]
+    算法的最终目的是在一个精细网格中求解非线性最优化问题：
+    \begin{align}
+        \min \limits_z \Phi_h (\vec{z}) - \vec{v}^T \vec{z}_h \label{4.1}
+    \end{align}
+    定义$h$表示精细网格，$H$表示粗糙网格，$I_h^H$表示限制算子（从精细网格限制到粗糙网格），$I_H^h$表示延拓算子（从粗糙网格插值到精细网格），并定义在同一层网格中，解决(\ref{4.1})式的最优化问题的求解算法（例如梯度下降法）的运算符：
+    \begin{align*}
+        \vec{z}'_h\leftarrow\mathrm{OPT}\left( \Phi_h \vec{z}_h, \vec{v}_h \right)
+    \end{align*}
+
+    给定初始预测值$\vec{z}_0$，以及初始梯度$\vec{v}=0$以V循环多重网格方法为基础，我们定义用于梯度下降法的多重网格框架运算符：
+    \begin{align*}
+        \vec{z}_h^+\leftarrow\mathrm{MG}\left( \Phi_h \vec{z}_h, \vec{v}_h \right)
+    \end{align*}
+    具体算法如下，如果到达设置的最粗糙网格：
+    \begin{align*}
+        \vec{z}_h\leftarrow\mathrm{OPT}\left( \Phi_h \vec{z}_h, \vec{v}_h \right)
+    \end{align*}
+    否则，执行以下步骤：
+    \begin{enumerate}
+        \item 预平滑，执行有限次数的最优化算法，获得较好的初始值：
+        \begin{align*}
+            \overline{\vec{z}_h}\leftarrow\mathrm{OPT}\left( \Phi_h \vec{z}_h, \vec{v}_h \right)
+        \end{align*}
+        \item 限制，计算从精细网格变换到粗糙网格下的目标对象和梯度：
+        \begin{align*}
+            \overline{\vec{z}_H}&=I_h^H\overline{\vec{z}_h}\\
+            \overline{\vec{v}_H}&=I_h^H\overline{\vec{v}_h}+\nabla \Phi_H (\overline{\vec{z}_H})- I_h^H \nabla \Phi_h (\overline{\vec{z}_h})
+        \end{align*}
+        \item 进入下一级粗糙网格：
+        \begin{align*}
+            \vec{z}_H^+\leftarrow\mathrm{MG}\left( \Phi_h, \overline{\vec{z}_H}, \overline{\vec{v}_H} \right)
+        \end{align*}
+        \item 计算检索方向，从粗糙网格将误差插值到精细网格中：
+        \begin{align*}
+            \vec{e}_H&=\vec{z}_H^+ - \overline{\vec{z}_H}\\
+            \vec{e}_h&=I_H^h \vec{e}_H
+        \end{align*}
+        \item 更新目标对象，使其满足$\Phi_h (\vec{z}_h^+) \leq \Phi_h (\overline{\vec{z}_h})$：
+        \begin{align*}
+            \vec{z}_h^+ = \overline{\vec{z}_h}+\alpha \vec{e}_h
+        \end{align*}
+        \item 后平滑，应用最优化算法降低到要求的计算精度或指定迭代次数：
+        \begin{align*}
+            \vec{z}_h\leftarrow\mathrm{OPT}\left( \Phi_h \vec{z}_h^+, \vec{v}_h \right)
+        \end{align*}
+    \end{enumerate}
+\end{frame}
+
+\subsection{将多重网格框架用于PIE等迭代重建算法}
+
+\begin{frame}
+    将(\ref{2})(\ref{2.0})式进行改写，在精细网格中可以写为：
+    \begin{align*}
+        \Phi_h (\vec{z}_h) & =\frac{1}{2}\sum_k^N \left\lVert \mathcal{PM}_{kh}(\vec{z}_h)-\hat{Q}_{kh} \vec{z}_h \right\rVert _2^2 \\
+        \mathcal{PM}_{kh}(\vec{z}_h)&=\mathcal{F}^{-1} \left[\sqrt{\vec{d}_{kh}}\odot \exp{(i \theta \mathcal{F}(\hat{Q}_{kh} \vec{z}_h))}\right]
+    \end{align*}
+    在粗糙网格中也进行改写，注意算子$\tilde{I}_h^H$表示$I_h^H$对应在傅里叶空间中的滤波器：
+    \begin{align*}
+        \Phi_H (\vec{z}_H) & =\frac{1}{2}\sum_k^N \left\lVert \mathcal{PM}_{kH}(\vec{z}_H)-\hat{Q}_{kH} \vec{z}_H \right\rVert _2^2 \\
+        \mathcal{PM}_{kH}(\vec{z}_H)&=\mathcal{F}^{-1} \left[\sqrt{\tilde{I}_h^H\vec{d}_{kh}}\odot \exp{(i \theta \mathcal{F}(I_h^H \hat{Q}_{kh} \vec{z}_h))}\right]
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+    \frametitle{工作展望}
+    \begin{itemize}
+        \item 过采样问题下的傅里叶空间滤波器算子
+        \item 将多重网格框架配合ER-HIO用于二维单次CDI
+        \item 傅里叶空间存在未知数据点时的投影算子
+        \item 将多重网格框架用于GENFIRE
+    \end{itemize}
+    \begin{block}{与KK关系的联系}
+        KK关系可以考虑用于基于迭代过程一个较好的预测值
+        
+        多重网格框架在本质上是通过在粗糙网格中的低成本迭代，基于精细网格中一个较好的初始值。
+    \end{block}
 
 \end{frame}
 

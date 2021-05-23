@@ -8,13 +8,12 @@ def readimage(path):
     return(np.array(Image.open(path).convert('L')))
 
 
-def showimage(data):
+def showimage(data,cmap='jet',vmax=255):
     plt.axis("equal")
     plt.axis([0, data.shape[0], 0, data.shape[1]])
     plt.gca().invert_yaxis()
     plt.gca().xaxis.set_ticks_position('top')
-    plt.pcolor(range(data.shape[0]+1), range(data.shape[1]+1), cp.asnumpy(data), cmap='jet',vmax=10000)
-    plt.show()
+    plt.pcolor(range(data.shape[0]+1), range(data.shape[1]+1), cp.asnumpy(data), cmap=cmap,vmax=vmax)
     pass
 
 def writeimage(data,path):
@@ -24,6 +23,3 @@ def writeimage(data,path):
 
 def read(path):
     return(np.array(Image.open(path)))
-
-a=read('./data/Lenna.png')
-print(a)

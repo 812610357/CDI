@@ -16,6 +16,20 @@ def iFFT(data):
     return(cp.fft.ifft2(data))
 
 
+def FFTs(data):
+    '''
+    傅里叶变换
+    '''
+    return(cp.fft.fftshift(cp.fft.fft2(data)))
+
+
+def iFFTs(data):
+    '''
+    傅里叶逆变换
+    '''
+    return(cp.fft.ifft2(cp.fft.fftshift(data)))
+
+
 def FScc(data, measurement):
     data = cp.abs(measurement)*data/cp.abs(data)
     return(data)
