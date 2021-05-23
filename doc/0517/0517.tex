@@ -19,6 +19,9 @@
 \usepackage{doi} %doi号宏
 \usepackage{svg}
 \usepackage{algorithm2e} %伪代码宏
+\usepackage{xcolor}  
+\usepackage{tikz} %流程框图宏
+
 \renewcommand{\vec}[1]{\boldsymbol{#1}} %设置向量样式
 
 \usetheme{Berlin}
@@ -36,9 +39,13 @@
 \setbeamertemplate{itemize items}{$\blacksquare $}
 \setbeamertemplate{caption}[numbered]
 
+\usetikzlibrary{arrows,shapes,chains} 
+\tikzstyle{format}=[rectangle, draw=red, fill=white, minimum width=3cm, minimum height=1cm, text centered, text width=3.5cm, font=\normalsize]
+\tikzstyle{format2}=[rectangle, draw=red, fill=white, minimum width=1cm, minimum height=1cm, text centered, text width=2cm, font=\normalsize] 
 
-\title{相干衍射相位恢复方法} %设置标题
-\subtitle{使用多重网格方法加速层叠相干衍射成像}
+
+\title{相干衍射成像算法改进 MG-PIE} %设置标题
+\subtitle{多重网格框架优化的层叠相干衍射成像}
 \author{欧纪阳} %设置作者
 \institute[SCU]{\textit{College of Physics, Sichuan University, Chengdu 610064, China}}
 \date{\today} %设置日期
@@ -58,6 +65,28 @@
         \subsectionpage
     \end{frame}
 }
+
+\begin{frame}
+    \frametitle{报告结构}
+    \begin{figure}
+        \scriptsize
+        \begin{tikzpicture}[node distance=20mm,auto,>=latex',thin,start chain=going right,every join/.style={norm},]
+            \node[format] (PIE){层叠相干衍射成像迭代引擎（PIE）};
+            \node[format,below of=PIE] (MG){求解偏微分方程多重网格方法（MG）};
+            \node[format, right of=PIE, node distance=50mm] (GD){PIE基于梯度下降法的最优化问题};
+            \node[format, below of=GD] (OPT){推广到非线性最优化问题的MG};
+            \path (GD.east)+(2.5,-1) node [format2] (MG-PIE){将MG用于PIE};
+            \node[format, below of=MG-PIE] (MG-CDI){推广到单次二维CDI、GENFIRE};
+            \draw[->] (PIE)--(GD);
+            \draw[->] (MG)--(OPT);
+            \draw[->] (GD)|-(MG-PIE);
+            \draw[->] (OPT)|-(MG-PIE);
+            \draw[->, dashed] (MG-PIE)--(MG-CDI);
+        \end{tikzpicture}
+    \end{figure}
+    
+
+\end{frame}
 
 \section{层叠相干衍射成像迭代引擎（PIE）}
 
@@ -246,17 +275,6 @@
 
 \begin{frame}
     \begin{figure}
-        \subfigure[相邻两层网格]{\includegraphics[height=4cm]{images/grid.png}}
-        \quad
-        \subfigure[延拓插值方法]{\includegraphics[height=4cm]{images/inter.png}}
-        \quad
-        \subfigure[限制算子矩阵]{\includegraphics[height=4cm]{images/res.png}}
-        \caption{双线性限制及插值方法}
-    \end{figure}
-\end{frame}
-
-\begin{frame}
-    \begin{figure}
         \includegraphics[height=6cm]{images/Multigrid_Visualization.png}
         \caption{V循环多重网格方法的示意图}
     \end{figure}
@@ -294,6 +312,17 @@
         \caption{\small $\nabla^2 \varphi=f$的V循环多重网格方法}
         \label{A2}
     \end{algorithm}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \subfigure[相邻两层网格]{\includegraphics[height=4cm]{images/grid.png}}
+        \quad
+        \subfigure[延拓插值方法]{\includegraphics[height=4cm]{images/inter.png}}
+        \quad
+        \subfigure[限制算子矩阵]{\includegraphics[height=4cm]{images/res.png}}
+        \caption{双线性限制及插值方法}
+    \end{figure}
 \end{frame}
 
 \begin{frame}
