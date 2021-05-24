@@ -32,7 +32,9 @@
 \setlength{\parindent}{2em} %缩进距离
 
 \setmathfont{Cambria Math} %设置数学公式样式
-%\bibliographystyle{gbt7714-numerical} %设置参考文献样式
+
+\bibliographystyle{gbt7714-numerical} %设置参考文献样式
+\setbeamertemplate{bibliography item}[text]
 
 %\logo{\includegraphics[height=0.1\textwidth]{images/SCU_logo.pdf}}
 %\setbeamertemplate{background}{\includegraphics[height=\paperheight]{images/SCU_logo.pdf}}
@@ -43,22 +45,14 @@
 \tikzstyle{format}=[rectangle, draw=red, fill=white, minimum width=3cm, minimum height=1cm, text centered, text width=3.5cm, font=\normalsize]
 \tikzstyle{format2}=[rectangle, draw=red, fill=white, minimum width=1cm, minimum height=1cm, text centered, text width=2cm, font=\normalsize] 
 
-
 \title{相干衍射成像算法改进 MG-PIE} %设置标题
-\subtitle{多重网格框架优化的层叠相干衍射成像}
+\subtitle{——多重网格框架优化的层叠相干衍射成像迭代引擎}
 \author{欧纪阳} %设置作者
 \institute[SCU]{\textit{College of Physics, Sichuan University, Chengdu 610064, China}}
 \date{\today} %设置日期
 
 \begin{document}
 \maketitle %插入标题
-
-\AtBeginSection{
-    \begin{frame}
-        \frametitle{目录}
-        \tableofcontents[currentsection,subsectionstyle=hide]
-    \end{frame}
-}
 
 \AtBeginSubsection{
     \begin{frame}
@@ -67,16 +61,24 @@
 }
 
 \begin{frame}
+    \begin{abstract}
+        层叠相干衍射成像（Ptychography）是利用探针来扫描多个照明位置，并记录其衍射图案，并且相邻的照明区域相互重叠，获得数据后在不同照明区域的实空间和傅里叶空间进行反复迭代，实现相位恢复的方法。其基础重建算法称为PIE，可以看做是利用梯度下降法解决最优化问题，但是因可能收敛到局部极小值，而无法收敛到全局最小值，导致收敛缓慢。多重网格方法（Multigrid）是求解偏微分方程的一种层次化方法，通过在粗糙网格中求解，插值后对精细网格解近似值进行全局修正来加速基本迭代法收敛的数值方法。MG也可以辅以梯度下降法，作为一种求解非线性优化问题的框架，将MG框架与PIE算法相结合可以加速收敛，降低误差，优化重建结果。
+    \end{abstract}
+    \small
+    \textbf{关键词：} 相位恢复 \quad 层叠相干衍射成像 \quad 多重网格方法 \quad 最优化问题 \quad 梯度下降法
+\end{frame}
+
+\begin{frame}
     \frametitle{报告结构}
     \begin{figure}
         \scriptsize
         \begin{tikzpicture}[node distance=20mm,auto,>=latex',thin,start chain=going right,every join/.style={norm},]
-            \node[format] (PIE){层叠相干衍射成像迭代引擎（PIE）};
-            \node[format,below of=PIE] (MG){求解偏微分方程多重网格方法（MG）};
-            \node[format, right of=PIE, node distance=50mm] (GD){PIE基于梯度下降法的最优化问题};
-            \node[format, below of=GD] (OPT){推广到非线性最优化问题的MG};
-            \path (GD.east)+(2.5,-1) node [format2] (MG-PIE){将MG用于PIE};
-            \node[format, below of=MG-PIE] (MG-CDI){推广到单次二维CDI、GENFIRE};
+            \node[format] (PIE){层叠相干衍射成像迭代引擎（PIE）\cite{faulkner2005error}};
+            \node[format, right of=PIE, node distance=50mm] (GD){PIE基于梯度下降法的最优化问题\cite{maiden2017further}};
+            \node[format,below of=PIE] (MG){求解偏微分方程多重网格方法（MG）\cite{Multigrid}};
+            \node[format, below of=GD] (OPT){推广到非线性最优化问题的MG\cite{nash2000a}};
+            \path (GD.east)+(2.5,-1) node [format2] (MG-PIE){将MG用于PIE\cite{fung2020multigrid}};
+            \node[format, below of=MG-PIE] (MG-CDI){推广到单次二维CDI\cite{fienup1982phase}、GENFIRE\cite{pryor2017genfire}};
             \draw[->] (PIE)--(GD);
             \draw[->] (MG)--(OPT);
             \draw[->] (GD)|-(MG-PIE);
@@ -84,11 +86,20 @@
             \draw[->, dashed] (MG-PIE)--(MG-CDI);
         \end{tikzpicture}
     \end{figure}
-    
-
 \end{frame}
 
+\begin{frame}
+    \small
+    \bibliography{MG} %选定bib文件提供的文献信息
+\end{frame}
+
+
 \section{层叠相干衍射成像迭代引擎（PIE）}
+
+\begin{frame}
+    \frametitle{目录}
+    \tableofcontents[currentsection,subsectionstyle=hide]
+\end{frame}
 
 \begin{frame}
     \begin{figure}
@@ -97,7 +108,6 @@
             \quad
             \subfigure[迭代示意图]{\includegraphics[height=4cm]{images/41566_2017.png}}
         \end{center}
-        \qquad 
         \caption{层叠相干衍射成像（Ptychography）}
     \end{figure}
 \end{frame}
@@ -195,6 +205,11 @@
 
 \section{PIE基于梯度的最优化问题}
 
+\begin{frame}
+    \frametitle{目录}
+    \tableofcontents[currentsection,subsectionstyle=hide]
+\end{frame}
+
 \subsection{投影最优化问题}
 
 \begin{frame}[allowframebreaks]
@@ -260,6 +275,11 @@
 
 \section{PDE中的多重网格方法}
 
+\begin{frame}
+    \frametitle{目录}
+    \tableofcontents[currentsection,subsectionstyle=hide]
+\end{frame}
+
 \subsection{基础算法构成}
 
 \begin{frame}
@@ -300,9 +320,9 @@
             $rhs$ = \restriction($res$)\\
             $eps$ = \zeros(\size($rhs$))\\
             \eIf{$h$ < $h_m$}{
-                \VCycle{$eps,rhs,2h$}
+                $eps$ = \VCycle{$eps,rhs,2h$}
             }{
-                \smoothing{$eps,rhs,2h$}
+                $eps$ = \smoothing{$eps,rhs,2h$}
             }
             $\varphi$ = $\varphi$ + \prolongation($eps$)\\
             $\varphi$ = \smoothing{$\varphi,f,h$} '后平滑（post-smoothing）\\
@@ -349,8 +369,7 @@
 
 \begin{frame}
     \begin{figure}
-        %\includegraphics[height=6cm]{images/q2e.png}
-        \caption{多重网格-五点差分-共轭梯度法的求解结果}
+        \includegraphics[height=6cm]{images/q2e.png}
     \end{figure}
 \end{frame}
 
@@ -364,18 +383,11 @@
     \end{figure}
 \end{frame}
 
-\section{基于梯度的多重网格框架与PIE的结合}
+\section{多重网格框架与PIE的结合}
 
 \begin{frame}
-    \frametitle{为什么要将两者进行结合}
-    \begin{itemize}
-        \item CDI中的相位恢复问题可以看做是最优化问题，多重网格框架可以用于解决此类问题；
-        \item 目前的傅里叶迭代算法易出现收敛到局部最小值，而无法收敛到全局最小值的情况；
-        \item 在拆分频段进行重建的算法，一定程度上提高提高收敛速度，降低了误差；
-        \item 在CDI实验中，可以轻松提取出不同频段成分；
-        \item 在CDI算法中，高频部分与低频率部分的收敛速度往往不尽相同；
-        \item 对粗糙网格进行处理，计算成本低，收敛迅速，插值后可作为精细网格的预测。
-    \end{itemize}
+    \frametitle{目录}
+    \tableofcontents[currentsection,subsectionstyle=hide]
 \end{frame}
 
 \begin{frame}
@@ -398,11 +410,23 @@
     \end{figure}
 \end{frame}
 
-\subsection{将多重网格框架用于梯度下降方法}
+\begin{frame}
+    \frametitle{为什么要将两者进行结合}
+    \begin{itemize}
+        \item CDI中的相位恢复问题可以看做是最优化问题，多重网格框架可以用于解决此类问题；
+        \item 目前的傅里叶迭代算法易出现收敛到局部最小值，而无法收敛到全局最小值的情况；
+        \item 在拆分频段进行重建的算法，一定程度上提高了收敛速度，降低了误差；
+        \item 在CDI实验中，可以轻松提取出不同频段成分；
+        \item 在CDI算法中，高频部分与低频率部分的收敛速度往往不尽相同；
+        \item 对粗糙网格进行处理，计算成本低，收敛迅速，插值后可作为精细网格的预测。
+    \end{itemize}
+\end{frame}
+
+\subsection{基于梯度的多重网格框架}
 \begin{frame}[allowframebreaks]
     算法的最终目的是在一个精细网格中求解非线性最优化问题：
     \begin{align}
-        \min \limits_z \Phi_h (\vec{z}) - \vec{v}^T \vec{z}_h \label{4.1}
+        \min \limits_z \Phi_h (\vec{z}_h) - \vec{v}_h^T \vec{z}_h \label{4.1}
     \end{align}
     定义$h$表示精细网格，$H$表示粗糙网格，$I_h^H$表示限制算子（从精细网格限制到粗糙网格），$I_H^h$表示延拓算子（从粗糙网格插值到精细网格），并定义在同一层网格中，解决(\ref{4.1})式的最优化问题的求解算法（例如梯度下降法）的运算符：
     \begin{align*}
@@ -448,7 +472,7 @@
     \end{enumerate}
 \end{frame}
 
-\subsection{将多重网格框架用于PIE等迭代重建算法}
+\subsection{将多重网格框架用于PIE等傅里叶迭代重建算法}
 
 \begin{frame}
     将(\ref{2})(\ref{2.0})式进行改写，在精细网格中可以写为：
@@ -464,6 +488,19 @@
 \end{frame}
 
 \begin{frame}
+    \frametitle{重建结果对比}
+    \begin{figure}
+        \subfigure[PIE]{\includegraphics[height=3.6cm]{images/5_pie.png}}
+        \quad
+        \subfigure[2层MG]{\includegraphics[height=3.6cm]{images/5_mg2.png}}
+        \quad
+        \subfigure[5层MG]{\includegraphics[height=3.6cm]{images/5_mg5.png}}
+
+        实验用图大小为$512 \times 512$，存在$\% 5$噪声情况下的重建结果，相邻两级网格大小比为2。
+    \end{figure}
+\end{frame}
+
+\begin{frame}
     \frametitle{工作展望}
     \begin{itemize}
         \item 过采样问题下的傅里叶空间滤波器算子
@@ -472,11 +509,8 @@
         \item 将多重网格框架用于GENFIRE
     \end{itemize}
     \begin{block}{与KK关系的联系}
-        KK关系可以考虑用于基于迭代过程一个较好的预测值
-        
-        多重网格框架在本质上是通过在粗糙网格中的低成本迭代，基于精细网格中一个较好的初始值。
+        KK关系可以考虑用于得到迭代过程一个较好的预测值；多重网格框架在本质上是通过在粗糙网格中的低成本迭代，插值到精细网格中从而一个较好的预测值。
     \end{block}
-
 \end{frame}
 
 \end{document}
