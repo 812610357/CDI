@@ -36,10 +36,15 @@
 \bibliographystyle{gbt7714-numerical} %设置参考文献样式
 \setbeamertemplate{bibliography item}[text]
 
-%\logo{\includegraphics[height=0.1\textwidth]{images/SCU_logo.pdf}}
+\logo{\includegraphics[height=0.1\textwidth]{images/SCU_logo.pdf}}
 %\setbeamertemplate{background}{\includegraphics[height=\paperheight]{images/SCU_logo.pdf}}
 \setbeamertemplate{itemize items}{$\blacksquare $}
 \setbeamertemplate{caption}[numbered]
+
+\expandafter\def\expandafter\insertshorttitle\expandafter{%
+	\insertshorttitle\hspace{10cm}%
+	\insertframenumber\,/\,\inserttotalframenumber \qquad\insertshortdate}
+
 
 \usetikzlibrary{arrows,shapes,chains} 
 \tikzstyle{format}=[rectangle, draw=red, fill=white, minimum width=3cm, minimum height=1cm, text centered, text width=3.5cm, font=\normalsize]
@@ -48,7 +53,9 @@
 \title{相干衍射成像算法改进 MG-PIE} %设置标题
 \subtitle{——多重网格框架优化的层叠相干衍射成像迭代引擎}
 \author{欧纪阳} %设置作者
-\institute[SCU]{\textit{College of Physics, Sichuan University, Chengdu 610064, China}}
+\institute[SCU]{\textit{College of Physics, Sichuan University, Chengdu 610064, China}\\
+\medskip
+Julian-OU@outlook.com}
 \date{\today} %设置日期
 
 \begin{document}
