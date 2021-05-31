@@ -12,7 +12,7 @@ comp=cp.array(fio.readimage("./data/Lenna_gray_180d.png"))
 for i in range(1):
     data=core.MultiGridRestriction(data)
 
-
+plt.figure(figsize=(8,8))
 padding = np.array(np.floor(np.array(data.shape) *
                             (oversamplingRatio-1)*0.5), dtype='int64')
 data = cp.pad(data, ((padding[0], padding[1]),
@@ -48,7 +48,7 @@ plt.plot(cp.asnumpy(error[:]),'--',label='ER-HIO')
 
 
 plt.legend()
-#plt.axis([0,100,0.325,0.345])
 plt.xlabel('step')
 plt.ylabel('RMSE')
-plt.show()
+plt.savefig('ERROR.svg')
+plt.savefig('ERROR.pdf')
