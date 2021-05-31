@@ -1,3 +1,4 @@
+from matplotlib.colors import LogNorm
 import matplotlib.pyplot as plt
 import numpy as np
 import cupy as cp
@@ -7,7 +8,7 @@ from PIL import Image
 def readimage(path):
     return(np.array(Image.open(path).convert('L')))
 
-
+import matplotlib.pyplot as plt
 def showimage(data,cmap='jet',vmax=255):
     plt.axis("equal")
     plt.axis([0, data.shape[0], 0, data.shape[1]])

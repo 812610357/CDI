@@ -1,23 +1,39 @@
 import cupy as cp
+import matplotlib.pyplot as plt
 import numpy as np
 
+import core
 import fileioput as fio
 
-data0=fio.readimage("./data/Lenna_gray_180d.png")
+path = "./data/Lenna_test.png"
+oversamplingRatio = 3
+data = cp.array(fio.readimage("./data/Lenna.png"),dtype='float64')
 
-data1 = fio.readimage("./data/OSS/Lenna_test_OSS_0.5.png")
+padding = np.array(np.floor(np.array(data.shape) *
+                            (oversamplingRatio-1)*0.5), dtype='int64')
 
-data2=fio.readimage("./data/OSS/Lenna_test_OSS_0.5_anti.png")
+plt.figure(figsize=[8,8])
+plt.subplot(2,2,1)
+fio.showimage(data,cmap='gray')
+plt.text(0,64,'(a)',color='w',fontsize=18)
 
+projection = cp.abs(core.FFTs(data))
 
+plt.subplot(2,2,2)
+fio.showimage(projection,cmap='jet',vmax=1e4)
+plt.text(0,64,'(b)',color='w',fontsize=18)
 
-for i in range(11):
-    datarms=0.1*i*data1+0.1*(10-i)*data2
-    fio.writeimage(datarms,"./data/OSS/Lenna_test_OSS_0.5_re_"+str(0.1*i)+".png")
+data = cp.pad(data, ((padding[0], padding[1]),
+                     (padding[0], padding[1])), 'constant')
 
-    data = fio.readimage(
-    "./data/OSS/Lenna_test_OSS_0.5_re_"+str(0.1*i)+".png")
-    a=np.array(data,dtype='float64')
-    b=np.array(data0,dtype='float64')
-    print(np.sqrt(np.mean((b-a)**2)))
+plt.subplot(2,2,3)
+fio.showimage(data,cmap='gray')
+plt.text(0,200,'(c)',color='w',fontsize=18)
 
+projection = cp.abs(core.FFTs(data))
+
+plt.subplot(2,2,4)
+fio.showimage(projection,cmap='jet',vmax=1e4)
+plt.text(0,200,'(d)',color='w',fontsize=18)
+
+plt.savefig('./OS.png')
